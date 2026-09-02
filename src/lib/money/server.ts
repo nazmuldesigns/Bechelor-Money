@@ -101,10 +101,34 @@ export const getOverview = createServerFn({ method: "GET" })
       from transactions
       where user_id = ${userId}
     `;
+
+    const day = await sql<{ income: unknown; expense: unknown }>`
+      select
+        coalesce(sum(case when kind = 'income' then amount else 0 end), 0) as income,
+        coalesce(sum(case when kind = 'expense' then amount else 0 end), 0) as expense
+      from transactions
+      where user_id = ${userId} and occurred_on = ${todayISO()}
+    `;
+    
     const month = await sql<{ income: unknown; expense: unknown }>`
       select
         coalesce(sum(case when kind = 'income' then amount else 0 end), 0) as income,
         coalesce(sum(case when kind = 'expense' then amount else 0 end), 0) as expense
+      from transactions
+      where user_id = ${userId} and occurred_on >= ${monthStartISO()}
+    `;
+
+    const monthDebt = await sql<{
+      borrow: unknown;
+      repay: unknown;
+      lend: unknown;
+      collect: unknown;
+    }>`
+      select
+        coalesce(sum(case when source = 'borrow' then amount else 0 end), 0) as borrow,
+        coalesce(sum(case when source = 'repay' then amount else 0 end), 0) as repay,
+        coalesce(sum(case when source = 'lend' then amount else 0 end), 0) as lend,
+        coalesce(sum(case when source = 'collect' then amount else 0 end), 0) as collect
       from transactions
       where user_id = ${userId} and occurred_on >= ${monthStartISO()}
     `;
@@ -190,6 +214,12 @@ export const getOverview = createServerFn({ method: "GET" })
     return {
       currency,
       cash: parseMoney(totals[0]?.income) - parseMoney(totals[0]?.expense),
+      dayIncome: parseMoney(day[0]?.income),
+      dayExpense: parseMoney(day[0]?.expense),
+      monthBorrow: parseMoney(monthDebt[0]?.borrow),
+      monthRepay: parseMoney(monthDebt[0]?.repay),
+      monthLend: parseMoney(monthDebt[0]?.lend),
+      monthCollect: parseMoney(monthDebt[0]?.collect),
       monthIncome: parseMoney(month[0]?.income),
       monthExpense: parseMoney(month[0]?.expense),
       payable,
