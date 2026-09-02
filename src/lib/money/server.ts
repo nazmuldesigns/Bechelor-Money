@@ -21,6 +21,10 @@ function monthStartISO() {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-01`;
 }
 
+function todayISO() {
+  return new Date().toISOString().slice(0, 10);
+}
+
 async function ensureWorkspace(userId: string, displayName?: string | null) {
   const sql = await getSql();
   await sql`
