@@ -30,6 +30,8 @@ const TABS: { id: EntryMode; label: string }[] = [
   { id: "income", label: "Income" },
   { id: "borrow", label: "Borrow" },
   { id: "lend", label: "Lend" },
+  { id: "repay", label: "Repay" },
+  { id: "collect", label: "Collect" },
   { id: "split", label: "Split" },
 ];
 
