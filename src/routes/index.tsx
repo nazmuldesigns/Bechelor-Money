@@ -17,17 +17,17 @@ function Home() {
 
   return (
     <AppShell>
-      <div className="px-5 pt-8">
+      <div className="px-5 pt-8 pb-4">
         <header className="flex items-center justify-between">
           <div>
-            <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted">
+            <p className="text-xs font-medium uppercase tracking-[0.2em] text-primary/80">
               Bachelor Money
             </p>
             <h1 className="mt-1 font-display text-2xl font-semibold tracking-tight">
               hey, {first.toLowerCase()}
             </h1>
           </div>
-          <div className="grid size-11 place-items-center overflow-hidden rounded-full bg-card text-sm font-medium">
+          <div className="grid size-11 place-items-center overflow-hidden rounded-full bg-gradient-to-br from-primary/30 to-card text-sm font-medium ring-1 ring-primary/20">
             {user?.profileImageUrl ? (
               <img src={user.profileImageUrl} alt="" className="size-full object-cover" />
             ) : (
@@ -42,55 +42,88 @@ function Home() {
           <p className="mt-8 text-sm text-danger">Could not load your ledger.</p>
         ) : data ? (
           <>
-            <section className="rise-in mt-8 rounded-3xl bg-card px-5 py-6">
+            <section className="rise-in mt-8 overflow-hidden rounded-3xl bg-gradient-to-br from-card via-card to-primary/10 px-5 py-6 ring-1 ring-border">
               <p className="text-xs font-medium uppercase tracking-widest text-muted">
-                Cash on hand
+                This month
               </p>
-              <p
-                className={cn(
-                  "mt-2 font-display text-5xl font-semibold tracking-tight tabular-nums",
-                  data.cash < 0 && "text-danger",
-                )}
-              >
-                {formatMoney(data.cash, data.currency)}
-              </p>
-              <div className="mt-6 grid grid-cols-2 gap-3">
-                <Stat
-                  label="In this month"
-                  value={formatMoney(data.monthIncome, data.currency)}
-                  tone="in"
-                />
-                <Stat
-                  label="Out this month"
-                  value={formatMoney(data.monthExpense, data.currency)}
-                  tone="out"
-                />
+              <div className="mt-4 grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-[11px] text-muted">Income</p>
+                  <p className="mt-1 font-display text-2xl font-semibold tabular-nums text-primary">
+                    {formatMoney(data.monthIncome, data.currency)}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-[11px] text-muted">Expense</p>
+                  <p className="mt-1 font-display text-2xl font-semibold tabular-nums text-danger">
+                    {formatMoney(data.monthExpense, data.currency)}
+                  </p>
+                </div>
+              </div>
+              <div className="mt-4 flex items-center justify-between rounded-2xl bg-card-2/80 px-3 py-3">
+                <span className="text-xs text-muted">Net (income − expense)</span>
+                <span
+                  className={cn(
+                    "font-display text-lg font-semibold tabular-nums",
+                    data.monthIncome - data.monthExpense < 0 ? "text-danger" : "text-primary",
+                  )}
+                >
+                  {formatMoney(data.monthIncome - data.monthExpense, data.currency)}
+                </span>
               </div>
             </section>
 
             <section className="mt-4 grid grid-cols-2 gap-3">
-              <Link
-                to="/people"
-                className="rounded-3xl bg-card px-4 py-4"
-              >
-                <p className="text-xs text-muted">You owe</p>
-                <p className="mt-1 font-display text-xl font-semibold tabular-nums text-danger">
-                  {formatMoney(data.payable, data.currency)}
-                </p>
-              </Link>
-              <Link to="/people" className="rounded-3xl bg-card px-4 py-4">
-                <p className="text-xs text-muted">Owed to you</p>
+              <div className="rounded-3xl bg-card px-4 py-4 ring-1 ring-border">
+                <p className="text-[11px] text-muted">Today · in</p>
                 <p className="mt-1 font-display text-xl font-semibold tabular-nums text-primary">
-                  {formatMoney(data.receivable, data.currency)}
+                  {formatMoney(data.dayIncome, data.currency)}
                 </p>
-              </Link>
+              </div>
+              <div className="rounded-3xl bg-card px-4 py-4 ring-1 ring-border">
+                <p className="text-[11px] text-muted">Today · out</p>
+                <p className="mt-1 font-display text-xl font-semibold tabular-nums text-danger">
+                  {formatMoney(data.dayExpense, data.currency)}
+                </p>
+              </div>
+            </section>
+
+            <section className="mt-4 rounded-3xl bg-card px-4 py-4 ring-1 ring-border">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-medium uppercase tracking-widest text-muted">
+                  Debt this month
+                </p>
+                <Link to="/people" className="text-[11px] text-primary">
+                  People
+                </Link>
+              </div>
+              <div className="mt-3 grid grid-cols-2 gap-3">
+                <MiniStat label="Borrowed" value={formatMoney(data.monthBorrow, data.currency)} />
+                <MiniStat label="Repaid" value={formatMoney(data.monthRepay, data.currency)} />
+                <MiniStat label="Lent" value={formatMoney(data.monthLend, data.currency)} />
+                <MiniStat label="Collected" value={formatMoney(data.monthCollect, data.currency)} />
+              </div>
+              <div className="mt-3 grid grid-cols-2 gap-3 border-t border-border pt-3">
+                <Link to="/people" className="rounded-2xl bg-card-2 px-3 py-3">
+                  <p className="text-[11px] text-muted">You owe</p>
+                  <p className="mt-0.5 font-display text-lg font-semibold tabular-nums text-danger">
+                    {formatMoney(data.payable, data.currency)}
+                  </p>
+                </Link>
+                <Link to="/people" className="rounded-2xl bg-card-2 px-3 py-3">
+                  <p className="text-[11px] text-muted">Owed to you</p>
+                  <p className="mt-0.5 font-display text-lg font-semibold tabular-nums text-primary">
+                    {formatMoney(data.receivable, data.currency)}
+                  </p>
+                </Link>
+              </div>
             </section>
 
             {data.people.filter((p) => p.balance !== 0).length > 0 ? (
               <section className="mt-8">
                 <div className="flex items-end justify-between">
-                  <h2 className="text-sm font-medium">People</h2>
-                  <Link to="/people" className="text-xs text-muted">
+                  <h2 className="text-sm font-medium">Open balances</h2>
+                  <Link to="/people" className="text-xs text-primary">
                     See all
                   </Link>
                 </div>
@@ -103,7 +136,7 @@ function Home() {
                         key={p.id}
                         to="/people/$personId"
                         params={{ personId: p.id }}
-                        className="min-w-28 shrink-0 rounded-2xl bg-card px-3 py-3"
+                        className="min-w-28 shrink-0 rounded-2xl bg-card px-3 py-3 ring-1 ring-border"
                       >
                         <p className="truncate text-sm font-medium">{p.name}</p>
                         <p
@@ -124,13 +157,13 @@ function Home() {
             <section className="mt-8">
               <div className="flex items-end justify-between">
                 <h2 className="text-sm font-medium">Recent</h2>
-                <Link to="/activity" className="text-xs text-muted">
+                <Link to="/activity" className="text-xs text-primary">
                   Activity
                 </Link>
               </div>
               {data.recent.length === 0 ? (
                 <p className="mt-6 text-sm leading-relaxed text-muted">
-                  Nothing yet. Tap the plus to log a spend, a borrow, or a split.
+                  Nothing yet. Tap + to log spend, borrow, or repay.
                 </p>
               ) : (
                 <div className="mt-2 divide-y divide-border">
@@ -154,26 +187,11 @@ function Home() {
   );
 }
 
-function Stat({
-  label,
-  value,
-  tone,
-}: {
-  label: string;
-  value: string;
-  tone: "in" | "out";
-}) {
+function MiniStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl bg-card-2 px-3 py-3">
+    <div className="rounded-2xl bg-card-2 px-3 py-2.5">
       <p className="text-[11px] text-muted">{label}</p>
-      <p
-        className={cn(
-          "mt-1 text-sm font-medium tabular-nums",
-          tone === "in" ? "text-primary" : "text-foreground",
-        )}
-      >
-        {value}
-      </p>
+      <p className="mt-0.5 text-sm font-medium tabular-nums">{value}</p>
     </div>
   );
 }
