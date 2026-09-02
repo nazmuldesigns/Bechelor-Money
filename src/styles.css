@@ -6,16 +6,16 @@
   --font-display: "Syne", "Outfit", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
-  --color-background: #070708;
-  --color-foreground: #f3f3f4;
-  --color-card: #121214;
-  --color-card-2: #1a1a1e;
-  --color-muted: #8e8e96;
-  --color-subtle: #6b6b73;
-  --color-border: rgb(243 243 244 / 0.1);
-  --color-border-strong: rgb(243 243 244 / 0.18);
-  --color-primary: #8ee4af;
-  --color-primary-foreground: #07140c;
+  --color-background: #06080a;
+  --color-foreground: #f0f4f2;
+  --color-card: #0f1412;
+  --color-card-2: #16201b;
+  --color-muted: #8a9a92;
+  --color-subtle: #5c6b64;
+  --color-border: rgb(142 228 175 / 0.12);
+  --color-border-strong: rgb(142 228 175 / 0.22);
+  --color-primary: #5ee4a0;
+  --color-primary-foreground: #062416;
   --color-danger: #ff7a86;
   --color-danger-foreground: #2a0b0e;
 
