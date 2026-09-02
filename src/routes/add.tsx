@@ -115,7 +115,7 @@ function AddPage() {
               onClick={() => setMode(tab.id)}
               className={cn(
                 "h-9 shrink-0 rounded-full px-4 text-xs font-medium",
-                mode === tab.id ? "bg-foreground text-background" : "bg-card text-muted",
+                mode === tab.id ? "bg-primary text-primary-foreground" : "bg-card text-muted",
               )}
             >
               {tab.label}
